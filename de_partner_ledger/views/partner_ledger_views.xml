@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_structured_form_ledger" model="ir.ui.view">
+        <field name="name">res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button string="Print Partner Ledger" type="object" name="action_partner_ledger" class="oe_highlight"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_ledger_wizard_report" model="ir.ui.view">
+        <field name="name">partner.ledger.wizard.report</field>
+        <field name="model">partner.ledger</field>
+        <field name="arch" type="xml">
+            <form string="Partner Ledger">
+                <group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="partner_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="end_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_partner_ledger_wizard" model="ir.actions.act_window">
+        <field name="name">Partner Ledger</field>
+        <field name="res_model">partner.ledger</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+<!--    <menuitem id="menu_partner_ledger_report_contact" name="Partner Ledger" parent="contacts.menu_contacts" action="action_partner_ledger_wizard" sequence="150" />-->
+<!--    <menuitem id="menu_partner_ledger_report" name="Partner Ledger" parent="account.account_reports_management_menu" action="action_partner_ledger_wizard" sequence="150" />-->
+</odoo>

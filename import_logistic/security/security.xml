@@ -1,0 +1,41 @@
+<odoo>
+
+    <record model="ir.module.category" id="import_root_groups">
+        <field name="name">Import Rights</field>
+    </record>
+
+    <record model="res.groups" id="local_purchase_group">
+        <field name="name">Local Purchase</field>
+        <field name="category_id" ref="import_logistic.import_root_groups"/>
+    </record>
+
+    <record model="res.groups" id="import_purchase_group">
+        <field name="name">Import Purchase</field>
+        <field name="category_id" ref="import_logistic.import_root_groups"/>
+    </record>
+
+         <record model="ir.rule" id="local_purchase_order_rule">
+            <field name="name">Local Purchase Order Rule</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="domain_force">[('s_for','=','local')]</field>
+             <field name="groups" eval="[
+                (4, ref('import_logistic.local_purchase_group'))
+            ]"/>
+            <field name="perm_read" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_unlink" eval="1" />
+        </record>
+
+    <record model="ir.rule" id="import_purchase_order_rule">
+            <field name="name">Local Purchase Order Rule</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="domain_force">[('s_for','=','import')]</field>
+             <field name="groups" eval="[(4, ref('import_logistic.import_purchase_group'))]"/>
+            <field name="perm_read" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_unlink" eval="1" />
+        </record>
+
+</odoo>

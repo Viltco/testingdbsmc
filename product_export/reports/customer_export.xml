@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <report id="customer_export_report"
+                model="res.partner"
+                string="Customer Export"
+                report_type="xlsx"
+                name="xlsx_customer_export.xlsx_customer_export"
+                file="Customer Export"
+                attachment_use="False"
+        />
+
+</odoo>

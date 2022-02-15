@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <template id="template_followup_report_inh" inherit_id="account_reports.main_template" >
+        <xpath expr="//div[1]" position="before">
+
+            <div class="col-12">
+
+                <div class="text-right">
+                    <strong>Address</strong>
+                    <t t-set="company" t-value="res_company"/>
+                    <h5><span t-esc="company.street"/></h5>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+    </data>
+</odoo>

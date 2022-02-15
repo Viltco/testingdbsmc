@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="whatsapp_send_msg_wizard" model="ir.ui.view">
+            <field name="name">whatsapp.message.wizard.form</field>
+            <field name="model">whatsapp.message.wizard</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Whatsapp Message" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="whatsapp_account" readonly="1"/>
+                                <br></br>
+                                <field name="contacts_to" widget="many2many_tags" readonly="context.get('default_selection_check', True)"/>
+                                <field name="mobile_no" invisible="context.get('default_invisible_check')"/>
+                                <br></br>
+                                <field name="message"/>
+                                <br></br>
+                                <field name="attatchments_whatsap" widget="many2many_binary"/>
+                            </group>
+                        </group>
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                  <button name="send_message" type="object" string="Send Message" class="oe_highlight" icon="fa-plug"  />-->
+<!--&lt;!&ndash;                                  <button name="cancel" string="Cancel" special="cancel"/>&ndash;&gt;-->
+
+<!--                            </group>-->
+<!--                        </group>-->
+                    </sheet>
+                    <footer>
+                            <button name="send_message" type="object" string="Send Message" class="oe_highlight" />
+                            <button string="Discard" special="cancel" style="width:10%"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!--        <record id="custom_message_wizard_2" model="ir.actions.act_window">-->
+<!--            <field name="name">Lost Reason</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">whatsapp.message.wizard</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="whatsapp_send_msg_wizard"/>-->
+<!--            <field name="target">new</field>-->
+<!--        </record>-->
+
+
+        <record id="whatsapp_send_msg_wizard_employee" model="ir.ui.view">
+            <field name="name">whatsapp.message.wizard.employee.form</field>
+            <field name="model">whatsapp.message.wizard.employee</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Whatsapp Message" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="whatsapp_account" readonly="1"/>
+                                <br></br>
+                                <field name="contacts_to" widget="many2many_tags" readonly="context.get('default_selection_check', True)"/>
+                                <field name="mobile_no" invisible="context.get('default_invisible_check')"/>
+                                <br></br>
+                                <field name="message"/>
+                                <br></br>
+                                <field name="attatchments_whatsap" widget="many2many_binary"/>
+                            </group>
+                        </group>
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                  <button name="send_message" type="object" string="Send Message" class="oe_highlight" icon="fa-plug"  />-->
+<!--                            </group>-->
+<!--                        </group>-->
+                    </sheet>
+                    <footer>
+                            <button name="send_message" type="object" string="Send Message" class="oe_highlight" />
+                            <button string="Discard" special="cancel" style="width:10%"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="whatsapp_send_msg_wizard_payment" model="ir.ui.view">
+            <field name="name">whatsapp.message.wizard.payment.form</field>
+            <field name="model">whatsapp.message.wizard.payments</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Whatsapp Message" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="whatsapp_account" readonly="1"/>
+                                <br></br>
+                                <field name="contacts_to" widget="many2many_tags" readonly="context.get('default_selection_check', True)"/>
+                                <field name="mobile_no" />
+                                <br></br>
+                                <field name="message"/>
+                                <br></br>
+                                <field name="attatchments_whatsap" widget="many2many_binary"/>
+                            </group>
+                        </group>
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                  <button name="send_message" type="object" string="Send Message" class="oe_highlight" icon="fa-plug"  />-->
+<!--                            </group>-->
+<!--                        </group>-->
+                    </sheet>
+                    <footer>
+                            <button name="send_message" type="object" string="Send Message" class="oe_highlight" />
+                            <button string="Discard" special="cancel" style="width:10%"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="whatsapp_send_msg_wizard_stock" model="ir.ui.view">
+            <field name="name">whatsapp.message.wizard.stock.form</field>
+            <field name="model">whatsapp.message.wizard.stock</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Whatsapp Message" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="whatsapp_account" readonly="1"/>
+                                <br></br>
+                                <field name="contacts_to" widget="many2many_tags" readonly="context.get('default_selection_check', True)"/>
+                                <field name="mobile_no"/>
+                                <br></br>
+                                <field name="message"/>
+                                <br></br>
+                                <field name="attatchments_whatsap" widget="many2many_binary"/>
+                            </group>
+                        </group>
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                  <button name="send_message" type="object" string="Send Message" class="oe_highlight" icon="fa-plug"  />-->
+<!--                            </group>-->
+<!--                        </group>-->
+                    </sheet>
+                    <footer>
+                            <button name="send_message" type="object" string="Send Message" class="oe_highlight" />
+                            <button string="Discard" special="cancel" style="width:10%"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+
+
+
+
+<!--        <record id="action_validate_account_move_wp" model="ir.actions.act_window">-->
+<!--            <field name="name">Whatsapp</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">whatsapp.message.wizard</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="whatsapp_send_msg_wizard"/>-->
+<!--            <field name="context">{'default_contacts_to': [[6, 0, active_ids]], 'default_whatsapp_account': 1}</field>-->
+<!--            <field name="target">new</field>-->
+<!--            <field name="binding_model_id" ref="model_res_partner" />-->
+<!--            <field name="binding_view_types">list</field>-->
+<!--        </record>-->
+
+
+    </data>
+</odoo>

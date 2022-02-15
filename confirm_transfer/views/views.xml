@@ -1,0 +1,26 @@
+<odoo>
+  <data>
+
+
+    <record id="action_server_create_transfer" model="ir.actions.server">
+      <field name="name">Create Transfer</field>
+      <field name="type">ir.actions.server</field>
+      <field name="binding_model_id" ref="model_stock_picking"/>
+      <field name="model_id" ref="model_stock_picking"/>
+      <field name="state">code</field>
+      <field name="code"> if records: records.create_stock_picking() </field>
+    </record>
+
+    <record id="vpicktree_inherit_stock_picking_batch_custom_field_new" model="ir.ui.view">
+        <field name="name">stock.picking.tree.custom</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="is_created" />
+            </xpath>
+        </field>
+    </record>
+
+  </data>
+</odoo>

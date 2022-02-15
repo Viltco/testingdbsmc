@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="general_ledger_report_header_footer">
+        <t t-set="company" t-value="res_company"/>
+        <div t-attf-class="header o_company_#{res_company.id}_layout" t-att-style="report_header_style" width="100%">
+            <div class="row" style="font-size:17px;">
+                <div class="col-4">
+                    <span>
+                        <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" alt="Logo" width="80%"/>
+                    </span>
+                </div>
+                <div class="col-8">
+                    <span style="font-weight:bold;">SHAHID MAHMOOD &amp; CO. (PVT) LTD.</span><br/>
+                    <span style="font-weight:bold;">Head Office:</span>&#160;<span t-field="res_company.street"/><br/><span t-field="res_company.email"/>&#160;&#160;&#160;<span>Customer Services:&#160;</span><span t-field="res_company.cs"/>
+                </div>
+            </div>
+            <br/>
+            <div class="text-left">
+                <h3 class="text-center">General Ledger</h3>
+                <div class="row mt64">
+                    <div class="col-6" >
+                        <strong>Account: </strong> <span t-esc="account"/>
+                    </div>
+                    <div class="col-6">
+                        <strong>Print Date: </strong> <span t-esc="print_date"/>
+                    </div>
+                </div>
+                <div class="row mt64">
+                    <div class="col-6" >
+                        <strong>User: </strong> <span t-esc="user.name"/>
+                    </div>
+                </div>
+                <p><strong>Date: </strong><span t-esc="date_from" t-options="{'widget': 'date'}"/>  <strong>- </strong><span t-esc="date_to" t-options="{'widget': 'date'}"/></p>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_company_#{res_company.id}_layout" t-att-data-oe-model="doc and doc._name" t-att-data-oe-id="doc and doc.id" t-att-data-oe-lang="doc and doc.env.context.get('lang')">
+            <div class="pt-5">
+                <t t-call="web.address_layout"/>
+            </div>
+
+            <t t-raw="0"/>
+        </div>
+        <div t-attf-class="footer o_standard_footer o_company_#{res_company.id}_layout"  style="margin-top:15px; padding-top:20px;">
+            <div class="text-center" style="border-top: 1px solid black; margin-top:15px; padding-top:15px;">
+                <ul class="list-inline mb4">
+                    <!-- using the list-inline-item class from bootstrap causes weird behaviours in pdf report
+                         adding d-inline class fixes the problem-->
+                    <!--                    <li t-if="res_company.phone" class="list-inline-item d-inline"><span class="o_force_ltr" t-field="res_company.phone"/></li>-->
+                    <!--                    <li t-if="res_company.email" class="list-inline-item d-inline"><span t-field="res_company.email"/></li>-->
+                    <li t-if="res_company.website" class="list-inline-item d-inline"><span t-field="res_company.website"/></li>
+                    <li t-if="res_company.website" class="list-inline-item d-inline"><span>http://facebook.com/smcgrouppk</span></li>
+                    <li t-if="res_company.website" class="list-inline-item d-inline"><span>http://instagram.com/smcgrouppk</span></li>
+
+                    <!--                    <li t-if="res_company.vat" class="list-inline-item d-inline"><t t-esc="res_company.country_id.vat_label or 'Tax ID'"/>: <span t-field="res_company.vat"/></li>-->
+                </ul>
+
+                <div name="financial_infos">
+                    <span t-field="res_company.report_footer"/>
+                </div>
+
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="footer" style="padding-top:0px;border:1px solid black;">
+                         footer
+        </div> -->
+    </template>
+
+    <record id="paperformat_general_ledger"
+            model="report.paperformat">
+        <field name="name">General Ledger A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">65</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">60</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_general_pdf_report" model="ir.actions.report">
+        <field name="name">General Ledger Report</field>
+        <field name="model">general.ledger.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">general_ledger_report_pdf.report_general_document</field>
+        <field name="paperformat_id" ref="general_ledger_report_pdf.paperformat_general_ledger"/>
+    </record>
+
+    <template id="report_general_document">
+        <t t-call="web.html_container">
+            <!--            <t t-call="web.external_layout">-->
+            <div class="article o_report_layout_standard" t-att-data-oe-model="doc and doc._name"
+                 t-att-data-oe-id="doc and doc.id">
+                <t t-call="general_ledger_report_pdf.general_ledger_report_header_footer"/>
+                <div class="page">
+                    <table class="table table-sm" name="account_lines_table" style="border-bottom:1px solid black;">
+                        <tr style="border-bottom:1px solid black;">
+                            <td style="border-bottom:1px solid black;width:10%;"><strong>Date</strong></td>
+                            <td style="border-bottom:1px solid black;width:15%;"><strong>Voucher#</strong></td>
+                            <td style="border-bottom:1px solid black; width:25%;"><strong>Details</strong></td>
+                            <td style="border-bottom:1px solid black; width:15%;" class="text-right"><strong>Debit</strong></td>
+                            <td style="border-bottom:1px solid black;width:15%;" class="text-right"><strong>Credit</strong></td>
+                            <td style="border-bottom:1px solid black;width:20%;" class="text-right"><strong>Balance</strong></td>
+                        </tr>
+                        <tbody>
+                            <tr>
+                                <strong> <td style="border-bottom:1px solid black;" colspan="5" class="text-left"><strong>Opening Balance</strong></td></strong>
+                                <!--                            <td style="border-bottom:1px solid black;" class="text-right"><strong><span t-esc="openbal"/></strong></td>-->
+                                <td style="border-bottom:1px solid black;" class="text-right"><strong><span t-esc="'{0:,.0f}'.format(int(opening))"/></strong></td>
+                            </tr>
+                            <t t-set="bal" t-value="opening"/>
+                            <t t-set="counter" t-value="0"/>
+                            <t t-set="total_debit" t-value="0"/>
+                            <t t-set="total_credit" t-value="0"/>
+                            <tr t-foreach="ledgers" t-as="l" style="font-size: 13px;" >
+                                <t t-set="bal" t-value="bal+(l.debit - l.credit)"/>
+                                <t t-set="total_debit" t-value="total_debit + l.debit"/>
+                                <t t-set="total_credit" t-value="total_credit + l.credit"/>
+                                <t t-set="counter" t-value="counter + 1"/>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="l.date" t-options="{'widget': 'date'}"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="l.move_id.name"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="l.name"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><t t-esc="'{0:,.0f}'.format(int(l.debit))"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><t t-esc="'{0:,.0f}'.format(int(l.credit))"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><t t-esc="'{0:,.0f}'.format(int(bal))"/></td>
+                            </tr>
+                            <tr style="border-top:1px solid #000; font-size:10px;">
+                                <td  style="border-bottom:1px solid black; font-size:13px;" colspan="3" class="text-left"><strong>Closing Balance</strong></td>
+                                <td  style="border-bottom:1px solid black; font-size:13px;" class="text-right"><strong><t t-esc="'{0:,.0f}'.format(int(total_debit))"/></strong></td>
+                                <td  style="border-bottom:1px solid black; font-size:13px;" class="text-right"><strong><t t-esc="'{0:,.0f}'.format(int(total_credit))"/></strong></td>
+                                <!--                            <td  style="border-bottom:1px solid black;" class="text-right"><strong><t t-esc="'{0:,.0f}'.format(int(amount_currency))"/></strong></td>-->
+                                <td  style="border-bottom:1px solid black; font-size:13px;" class="text-right"><strong><t t-esc="'{0:,.0f}'.format(int(closing))"/></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+        <!--        </t>-->
+    </template>
+
+</odoo>

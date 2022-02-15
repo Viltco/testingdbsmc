@@ -1,0 +1,337 @@
+<odoo>
+
+    <record id="paperformat_landed_cost"
+            model="report.paperformat">
+        <field name="name">Landed A4 Landscape</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">45</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">43</field>
+        <field name="dpi">90</field>
+    </record>
+    <!-- QWeb Reports -->
+<!--    <report-->
+<!--            id="landed_cost_report"-->
+<!--            string="Landed Cost Report"-->
+<!--            model="stock.picking"-->
+<!--            report_type="qweb-pdf"-->
+<!--            name="import_logistic.report_landed_cost_inh"-->
+<!--            file="import_logistic.report_landed_cost_inh"-->
+<!--            paperformat="paperformat_landed_cost"-->
+<!--    />-->
+    <report
+            id="landed_cost_report"
+            string="Landed Cost Report"
+            model="purchase.order"
+            report_type="qweb-pdf"
+            name="import_logistic.report_landed_cost_inh"
+            file="import_logistic.report_landed_cost_inh"
+            paperformat="paperformat_landed_cost"
+    />
+
+    <template id="report_landed_cost_inh">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <!--                <t t-call="web.external_layout_standard">-->
+                    <!--                <t t-call="web.internal_layout">-->
+                    <!--                    <t t-call="purchase_order_report.your_custom_layout_header">-->
+                    <div class="page">
+                        <!--                        <t t-call="web.external_layout_standard">-->
+                        <div style="font-weight: bold;" align="center">
+                            <strong><h3>Product Costing Report</h3></strong>
+                        </div><br/>
+                        <div class="row">
+                            <div class="col-6" style="font-size:18px;">
+                                <strong>PO No: <span class="m-0" t-field="o.name"/></strong>
+                            </div>
+                            <div class="col-6" style="font-size:17px;">
+                                <strong>Created By: </strong><span class="m-0" t-esc="user.name"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" style="font-size:18px;">
+                                <strong>Vendor: <span class="m-0" t-field="o.partner_id.name"/></strong>
+                            </div>
+                            <div class="col-6" style="font-size:17px;">
+                                <strong>Conversion Rate: </strong><span class="m-0" t-field="o.fx_rate"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" style="font-size:17px;">
+                                <strong>BL No: </strong><span class="m-0" t-field="o.bl_no"/>
+                            </div>
+                            <div class="col-6" style="font-size:17px;">
+                                <strong>Created Date: </strong><span class="m-0" t-esc="o.get_print_date()"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" style="font-size:17px;">
+                               <strong> GD No: </strong><span class="m-0" t-field="o.gd_no"/>
+                            </div>
+                            <div class="col-6" style="font-size:17px;">
+                               <strong> Clearing Agent Bill No No: </strong><span class="m-0" t-field="o.clearing_no"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" style="font-size:17px;">
+                                <strong>INV No: </strong><span class="m-0" t-field="o.inv_no"/>
+                            </div>
+<!--                            <div class="col-6">-->
+<!--                                <span class="m-0" t-field="o.bl_no"/>-->
+<!--                            </div>-->
+                        </div>
+
+<!--                        <table><tr><td>&#160;</td></tr></table><br/><br/>-->
+                        <t t-set="grand_total_sale" t-value="0"/>
+                        <t t-set="grand_total_cost" t-value="0"/>
+                        <t t-set="grand_total_fc" t-value="0"/>
+                        <table class="table table-sm o_main_table" >
+                            <thead >
+                                <tr style="background-color:#F0F0F0">
+                                    <th name="th_description"  style="border:1px solid black;"><strong>Sr No</strong></th>
+                                    <th name="th_description" style="border:1px solid black;">ITEM Descriptions</th>
+                                    <th name="th_taxes"  style="border:1px solid black;"><strong>Art No.</strong></th>
+                                    <th name="th_date_req" class="text-center"  style="border:1px solid black;"><strong>Finish</strong></th>
+                                    <th name="th_quantity" class="text-center"  style="border:1px solid black;"><strong>QTY</strong></th>
+                                    <th name="th_price_unit" class="text-center"  style="border:1px solid black;"><strong>UOM</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>INV Value</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>INV Total</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Unit Ass Val</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Assd Total</strong></th>
+<!--                                    <th name="th_amount" class="text-center"><strong>Val in PKR</strong></th>-->
+<!--                                    <th name="th_amount" class="text-center"><strong>Per unit in PKR</strong></th>-->
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Unit C.D</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Total C.D</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Other Unit Cost</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Other Total</strong></th>
+
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Unit Cost</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Total Cost</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Sale Rate</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Sale Total</strong></th>
+                                    <th name="th_amount" class="text-center"  style="border:1px solid black;"><strong>Margin(%)</strong></th>
+<!--                                    <th name="th_amount" class="text-right"><strong>Picture</strong></th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.picking_ids.purchase_ids" t-as="purchase">
+                                    <t t-set="current_total" t-value="0"/>
+                                    <t t-set="total_qty" t-value="0"/>
+                                    <t t-set="total_fc" t-value="0"/>
+                                    <t t-set="assess_val" t-value="0"/>
+                                    <t t-set="total_assess_val" t-value="0"/>
+                                    <t t-set="total_cd" t-value="0"/>
+                                    <t t-set="total_other_charges" t-value="0"/>
+                                    <t t-set="unit_cost_total" t-value="0"/>
+                                    <t t-set="total_cost" t-value="0"/>
+                                    <t t-set="sale_total" t-value="0"/>
+                                    <tr style="font-weight:bold;font-size:20px;border:1px solid black;"  >
+                                        <td id="customer" colspan="19" style="border:1px solid black;">
+                                            <span t-field="purchase.partner_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="count" t-value="0"/>
+                                    <t t-set="total_margin" t-value="0"/>
+                                    <t t-foreach="purchase.order_line" t-as="line">
+                                        <t t-set="count" t-value="count+1"/>
+                                        <t t-set="total_qty" t-value="total_qty + line.product_qty"/>
+                                        <t t-set="total_fc" t-value="total_fc + line.sub_total_fc"/>
+                                        <t t-set="assess_val" t-value="assess_val + line.assessed_value"/>
+                                        <t t-set="total_assess_val" t-value="total_assess_val + line.total_assessed_value"/>
+                                        <t t-set="total_cd" t-value="total_cd + line.cust_duty"/>
+                                        <t t-set="total_other_charges" t-value="total_other_charges + line.other_charges"/>
+                                        <tr t-att-class="'font-weight-bold'">
+                                            <td id="product" style="border:1px solid black;">
+                                                <span t-esc="count"/>
+                                            </td>
+                                            <td id="product" style="border:1px solid black;">
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td id="product" style="border:1px solid black;">
+                                                <span t-field="line.product_id.article_no"/>
+                                            </td>
+                                            <td id="product" style="border:1px solid black;">
+                                                <span t-field="line.product_id.finish_no"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.product_qty"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.product_uom"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.unit_pricefc" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.sub_total_fc" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.assessed_value" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.total_assessed_value" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <t t-set="fx" t-value="o.fx_rate"/>
+<!--                                            <td id="product">-->
+<!--                                                <span t-esc="(line.product_qty * line.unit_pricefc) * fx" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>-->
+<!--                                            </td>-->
+<!--                                            <td id="product">-->
+<!--                                                <span t-esc="line.unit_pricefc * fx" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>-->
+<!--                                            </td>-->
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="line.cust_duty/line.product_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.cust_duty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="line.other_charges/line.product_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.other_charges" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="(line.unit_pricefc * fx) + (line.cust_duty/line.product_qty) + (line.other_charges/line.product_qty)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="((line.product_qty * line.unit_pricefc) * fx)+(line.cust_duty) + (line.other_charges)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-field="line.product_id.lst_price" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="line.product_id.lst_price * line.product_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+                                            <t t-set="sale_total_my" t-value="((line.product_id.lst_price * line.product_qty)-(((line.product_qty * line.unit_pricefc) * fx)+(line.cust_duty) + (line.other_charges)))/(((line.product_qty * line.unit_pricefc) * fx)+(line.cust_duty) + (line.other_charges))"/>
+                                            <td id="product" class="text-right" style="border:1px solid black;">
+                                                <span t-esc="sale_total_my*100" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 1}"/>
+                                            </td>
+<!--                                            <td>-->
+<!--                                            </td>-->
+                                            <t t-set="unit_cost_total" t-value="unit_cost_total + (line.unit_pricefc * fx) + (line.cust_duty/line.product_qty) + (line.other_charges/line.product_qty)"/>
+                                            <t t-set="total_cost" t-value="total_cost + ((line.product_qty * line.unit_pricefc) * fx)+(line.cust_duty) + (line.other_charges)"/>
+                                            <t t-set="sale_total" t-value="sale_total + line.product_id.lst_price * line.product_qty"/>
+                                            <t t-set="total_margin" t-value="total_margin + (sale_total_my*100)"/>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td style="border:1px solid black;" colspan="19">
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" style="border:1px solid black;font-weight:bold;"><strong>Total</strong></td>
+<!--                                        <td></td>-->
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_fc" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+<!--                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="assess_val" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>-->
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_assess_val" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+<!--                                        <td></td>-->
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_cd" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_other_charges" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+<!--                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="unit_cost_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>-->
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_cost" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+<!--                                        <td></td>-->
+<!--                                        <td></td>-->
+                                        <td style="border:1px solid black;"></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="sale_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+                                        <td style="font-size:18px;border:1px solid black;font-weight:bold;" class="text-right"><strong><span t-esc="total_margin/count" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></strong></td>
+<!--                                        <td></td>-->
+<!--                                        <td></td>-->
+<!--                                        <td></td>-->
+<!--                                        <td></td>-->
+                                    </tr>
+                                    <t t-set="grand_total_sale" t-value="grand_total_sale + sale_total"/>
+                                    <t t-set="grand_total_cost" t-value="grand_total_cost + total_cost"/>
+                                    <t t-set="grand_total_fc" t-value="total_fc"/>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <table width="40%" style="page-break-inside: auto;">
+                            <tr>
+                                <td class="text-center" style="font-size:20px;border:1px solid black;padding:5px;" >Total Sale</td>
+                                <td class="text-right" style="font-size:20px;border:1px solid black;padding:5px;" ><span t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}" t-esc="grand_total_sale"/></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" style="font-size:20px;border:1px solid black;padding:5px;" >Total Cost</td>
+                                <td class="text-right" style="font-size:20px;border:1px solid black;padding:5px;" ><span t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}" t-esc="grand_total_cost"/></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" style="font-size:20px;border:1px solid black;padding:5px;font-weight:bold;" >Profit</td>
+                                <td class="text-right" style="font-size:20px;border:1px solid black;padding:5px;font-weight:bold;" ><span t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}" t-esc="grand_total_sale - grand_total_cost"/></td>
+                            </tr>
+                        </table>
+                        <br/>
+
+                        <table width="40%" style="table-layout:fixed;page-break-inside: avoid;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th name="th_description" class="text-center" colspan="2" style="border:1px solid black;padding:5px;"><h4>Expense Overview</h4></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="lc" t-value="o.get_lc()"/>
+                                <t t-set="lc_total" t-value="0"/>
+                                <t t-foreach="lc.cost_lines" t-as="line">
+                                    <tr class="text-center">
+                                        <td style="border:1px solid black;padding:5px;font-size:20px;"><span t-field="line.product_id.name" /></td>
+                                        <td class="text-right" style="border:1px solid black; padding:5px;font-size:20px;"><span t-field="line.price_unit" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                        <t t-set="lc_total" t-value="lc_total + line.price_unit"/>
+                                    </tr>
+                                </t>
+                                <tr class="text-center">
+                                    <td style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;">Total</td>
+                                    <td class="text-right" style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;"><span t-esc="lc_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+
+                        <table width="40%" style="table-layout:fixed;page-break-inside: avoid;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th name="th_description" class="text-center" colspan="2" style="border:1px solid black;padding:5px;"><h4>Invoice Value in Pkr</h4></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;">Total Invoice In Currency(<span t-esc="o.currency_id.symbol"/>)</td>
+                                    <td class="text-right" style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;"><span t-esc="grand_total_fc" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;">Rate</td>
+                                    <td class="text-right" style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;"><span t-esc="o.fx_rate" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;">Total</td>
+                                    <td class="text-right" style="border:1px solid black; padding:5px;font-size:20px;font-weight:bold;"><span t-esc="o.fx_rate * grand_total_fc" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

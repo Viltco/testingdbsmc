@@ -1,0 +1,21 @@
+<odoo>
+  <data>
+
+
+    <record id="view_branch_wizard_form_branch_inherit_" model="ir.ui.view">
+            <field name="name">branch.wizard.inherit</field>
+            <field name="model">branch.wizard</field>
+            <field name="inherit_id" ref="branch_report.create_branch_report_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="///field[@name='branch']" position="after">
+                  <field name="branches" widget="many2many_tags" invisible="1"/>
+                </xpath>
+                <xpath expr="///field[@name='branch']" position="attributes">
+                  <attribute name="domain">[('id', 'in', branches)]</attribute>
+                    <attribute name="options">{'no_quick_create': True, 'no_create_edit' : True}</attribute>
+                </xpath>
+            </field>
+    </record>
+
+  </data>
+</odoo>

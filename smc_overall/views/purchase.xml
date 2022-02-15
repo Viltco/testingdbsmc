@@ -1,0 +1,70 @@
+<odoo>
+
+    <record model="ir.ui.view" id="view_purchase_order_inherit">
+        <field name="name">purchase.order.form.inh</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_stock.purchase_order_view_form_inherit"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//field[@name='currency_id']" position="after">-->
+<!--                <field name="status_ref"/>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//field[@name='date_order']" position="after">
+                <field name="picking_type_id" required="False"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="view_purchase_order_inh">
+        <field name="name">purchase.order.form.inh</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="status_ref"/>
+                <field name="manual_status" attrs="{'invisible': [('status_ref', '!=', 'custom')]}"/>
+            </xpath>
+<!--             <xpath expr="//field[@name='picking_type_id']" position="replace">-->
+<!--                <field name="picking_type_id"/>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_order_tree_inh">
+        <field name="name">purchase.order.tree.inh</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='amount_total']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="date_planned"/>
+                <field name="status_ref"/>
+                <field name="manual_status"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="amount_total" widget="monetary" optional="show" decoration-bf="1" attrs="{'invisible': [('origin', '!=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_order_tree_req_inh">
+        <field name="name">purchase.order.tree.inh</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="status_ref"/>
+                <field name="manual_status"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

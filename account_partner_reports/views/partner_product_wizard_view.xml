@@ -1,0 +1,28 @@
+<odoo>
+    <record id="partner_product_wizard_form" model="ir.ui.view">
+        <field name="name">partner.product.wizard.form</field>
+        <field name="model">partner.product.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Partner Product Wizard">
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="partner_id" required="1"/>
+                    </group>
+                <footer>
+                    <button name="partner_product_report_action" string="Print" class="btn-primary" type="object"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="partner_product_wizard_action" model="ir.actions.act_window">
+        <field name="name">Partner Product Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">partner.product.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="partner_product_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="partner_product_wizard_root" name="Client Account Statement" parent="sale.product_menu_catalog" action="partner_product_wizard_action" sequence="20"/>
+</odoo>

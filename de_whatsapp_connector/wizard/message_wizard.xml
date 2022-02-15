@@ -1,0 +1,69 @@
+<odoo>
+    <data>
+        <record id="custom_message_wizard_form" model="ir.ui.view">
+            <field name="name">message.wizard</field>
+            <field name="model">message.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <group class="oe_title">
+                        <field name="text"/>
+                    </group>
+                    <footer>
+                        <button string="Ok" class="oe_highlight" special="cancel" style="width:10%"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_message_wizard" model="ir.actions.act_window">
+            <field name="name">Lost Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">message.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_message_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+
+
+
+
+<!--        <record id="box_create_refund_form" model="ir.ui.view">-->
+<!--            <field name="name">box.create_refund.wizard</field>-->
+<!--            <field name="model">select.account</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="box Refund">-->
+<!--                    <group class="oe_title">-->
+<!--&lt;!&ndash;                        <field name="box_order_id"/>&ndash;&gt;-->
+
+<!--                        <field name="box_account">-->
+<!--                            <tree editable="bottom" edit="1" create="1">-->
+<!--                                <field name="name"/>-->
+<!--                                <field name="client_id"/>-->
+
+<!--&lt;!&ndash;                                <button name="select_fro_refund"&ndash;&gt;-->
+<!--                            </tree>-->
+<!--                        </field>-->
+<!--                    </group>-->
+<!--                    <footer>-->
+<!--                        <button string="Submit" type="object" class="btn-primary"/>-->
+<!--                        <button string="Cancel" class="btn-secondary" special="cancel"/>-->
+<!--                    </footer>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="box_refund_wizard_action" model="ir.actions.act_window">-->
+<!--            <field name="name">box Refund</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">select.account</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="box_create_refund_form"/>-->
+<!--            <field name="target">new</field>-->
+<!--        </record>-->
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<odoo>
+<record id="view_payroll_wizard_form" model="ir.ui.view">
+		<field name="name">Payroll wizards</field>
+		<field name="model">payroll.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Payroll Payment">
+
+                <field name="payslip_line" options="{'no_create': True, 'no_quick_create': True, 'no_edit':False}">
+                   <tree editable="bottom" create="0" delete="0">
+                       <field name="slip_id" invisible="1"/>
+                       <field name="employee_id" string="Employee" readonly="1" force_save="1"/>
+                        <field name='conveyance'/>
+                        <field name='mobile_allowance'/>
+                        <field name='meal_allowance'/>
+                    </tree>
+                </field>
+
+					<footer>
+						<button name="create_data" string="Save" type="object" class="btn-primary"/>
+						<button  string="Close" type="object" class="btn-secondary" special="cancel"/>
+					</footer>
+			</form>
+		</field>
+	</record>
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+
+        <record id="request_seq_view" model="ir.sequence">
+                <field name="name">Return Request</field>
+                <field name="code">return.bash.sequence</field>
+                <field name="prefix">SRN</field>
+                <field name="padding">4</field>
+                <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="request_payment_seq_view" model="ir.sequence">
+                <field name="name">Return Payment</field>
+                <field name="code">return.payment.sequence</field>
+                <field name="prefix">PRN</field>
+                <field name="padding">4</field>
+                <field name="company_id" eval="False"/>
+        </record>
+
+</odoo>

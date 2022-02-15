@@ -1,0 +1,8 @@
+<odoo>
+<report id="product_report_repo"
+        string="Product Report"
+        model="product.wizard"
+        report_type="qweb-pdf"
+        name="product_wise_report.product_report_temp"
+        file="product_wise_report.product_report_temp"/>
+</odoo>

@@ -1,0 +1,1 @@
+from . import report_qr_code_pdf

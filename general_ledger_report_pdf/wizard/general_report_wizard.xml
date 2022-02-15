@@ -1,0 +1,33 @@
+<odoo>
+
+
+	<record id="view_general_report_wizard_form" model="ir.ui.view">
+		<field name="name">General Report wizards</field>
+		<field name="model">general.ledger.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Apply Advance Payment">
+				<group col="4">
+					<field name="date_from" required="1"/>
+					<field name="date_to" required="1"/>
+					<field name="account_id" required="1"/>
+				</group>
+				<footer>
+					<button name="print_report" string="Apply" type="object" class="btn-primary"/>
+					<button  string="Cancel" type="object" class="btn-secondary" special="cancel"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_general_report_wizard_form" model="ir.actions.act_window">
+		<field name="name">General Ledger Report</field>
+		<field name="res_model">general.ledger.wizard</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_general_report_wizard_form"/>
+		<field name="target">new</field>
+	</record>
+
+	<menuitem id="general_ledger_report_menu_new" action="general_ledger_report_pdf.action_general_report_wizard_form" name="General Ledger PDF" parent="account_reports.account_reports_partners_reports_menu" />
+
+</odoo>

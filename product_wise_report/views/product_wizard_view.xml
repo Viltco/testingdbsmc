@@ -1,0 +1,27 @@
+<odoo>
+    <record id="product_wizard_form" model="ir.ui.view">
+        <field name="name">product.wizard.form</field>
+        <field name="model">product.wizard</field>
+        <field name="arch" type="xml">
+        <form string="Product Wizard">
+                <group>
+                    <field name="partner_id" domain="[('is_import_vendor', '=', True)]"/>
+                </group>
+            <footer>
+                <button name="product_report_action" string="Print" class="btn-primary" type="object"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+    <record id="product_wizard_action" model="ir.actions.act_window">
+        <field name="name">Product Invoices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="product_wizard_root" name="Report" parent="purchase.menu_purchase_root" sequence="20"/>
+    <menuitem id="product_wizard_menu" name="Product Invoices" parent="product_wizard_root" action="product_wizard_action" sequence="20"/>
+</odoo>

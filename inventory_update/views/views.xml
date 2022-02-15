@@ -1,0 +1,35 @@
+<odoo>
+
+    <record id="inventory_update_wizard_form_view" model="ir.ui.view">
+        <field name="name">Inventory Update</field>
+        <field name="model">inventory.update</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="4">
+                    <field name="product_ids" widget="many2many_tags"/>
+                    <field name="location_id"/>
+                </group>
+                <footer>
+                    <button name="action_update_products" string="Update" type="object" class="btn-primary"/>
+                    <button string="Cancel" type="object" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_inventory_update_view" model="ir.actions.act_window">
+        <field name="name">Inventory Update</field>
+        <field name="res_model">inventory.update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="inventory_update_wizard_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_inventory_update"
+              name="Inventory Update"
+              action="inventory_update.action_inventory_update_view"
+              parent="stock.menu_stock_config_settings"
+              sequence="19"/>
+
+</odoo>

@@ -1,0 +1,102 @@
+<odoo>
+
+    <record id="view_customer_service_form" model="ir.ui.view">
+        <field name="name">customer.service.form</field>
+        <field name="model">customer.service</field>
+        <field name="arch" type="xml">
+            <form string="Customer Service">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+   </record>
+
+    <record id="view_customer_service_tree" model="ir.ui.view">
+        <field name="name">customer.service.tree</field>
+        <field name="model">customer.service</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_customer_service_search" model="ir.ui.view">
+        <field name="name">customer.service.search</field>
+        <field name="model">customer.service</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_customer_service_view" model="ir.actions.act_window">
+        <field name="name">Customer Service</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">customer.service</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_customer_service_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found. Let's Create..........
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_customer_service"
+              name="Customer Service"
+              parent="helpdesk.helpdesk_menu_config"
+              action="action_customer_service_view"
+              sequence="19"
+    />
+
+    <record id="view_helpdesk_ticket_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="before">
+                <field name="sr_no"/>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <span class="o_form_label o_td_label" name="address">
+                    <b>Address</b>
+                </span>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country"/>
+                </div>
+                <field name="phone"/>
+                <field name="brand"/>
+                <field name="sale_agent"/>
+                <field name="service_charge"/>
+                <field name="date_service"/>
+                <field name="article_no"/>
+                <field name="problem"/>
+                <field name="serial_number"/>
+                <field name="warranty" widget="radio"/>
+                <field name="client_confirmation" widget="radio"/>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="string">Received Via</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Client Name</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

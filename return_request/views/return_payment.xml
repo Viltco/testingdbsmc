@@ -1,0 +1,79 @@
+<odoo>
+
+    <record model="ir.ui.view" id="account_paymnet_form_inh">
+        <field name="name">account.payment.form.inh</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="return_id" string="Return Ref"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="return_payment_tree">
+        <field name="name">Return Payment</field>
+        <field name="model">returns.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="branch_id"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="return_payment_form">
+        <field name="name">Return Request Form View</field>
+        <field name="model">returns.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Confirm" states="draft" type="object" name="action_confirm" class="oe_highlight"/>
+                    <button string="Approve" states="director" type="object" name="action_approve" class="oe_highlight" groups="return_request.group_request_director"/>
+                    <button string="Reject" states="director" type="object" name="action_reject" class="oe_highlight" groups="return_request.group_request_director"/>
+                    <button string="Set To Draft" states="rejected" type="object" name="action_draft"/>
+                    <button string="Cancel" type="object" name="action_cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,director,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group col="4">
+                        <field name="partner_id" required="1"/>
+                        <field name="journal_id" required="1"/>
+                        <field name="amount"/>
+                        <field name="user_id" readonly="1"/>
+                        <field name="date"/>
+                        <field name="branch_id" readonly="1"/>
+                        <field name="ref"/>
+                        <field name="payment_id" string="Reference"/>
+                    </group>
+                    <group string="Customer Type">
+                        <field name="corporate_sale"/>
+                        <field name="other_receipt"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="return_payment_action_window">
+        <field name="name">Return Payment</field>
+        <field name="res_model">returns.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Return Payment" id="return_payment_menu_1" parent="return_request.return_request_menu_root" action="return_payment_action_window"/>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="customer_qr" model="ir.ui.view">
+        <field name="name">res.partner.qr</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/div[1]" position="before">
+                <button name="generate_cust_qr" type="object" string="Generate Qr" class="btn btn-primary"  invisible="1"/>
+            </xpath>
+            <field name="vat" position="after">
+                <field name="qr_code" widget="image" class="oe_avatar" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

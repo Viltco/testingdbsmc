@@ -1,0 +1,92 @@
+<odoo>
+
+
+    <record id="view_picking_internal_search_inherit_stock_picking_transit" model="ir.ui.view">
+        <field name="name">stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="after">
+                <filter name="in_transit" string="Intransit" domain="[('state', '=', 'in_transit')]"/>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_order_form_inh">
+        <field name="name">sale.order.form.inh</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_draft']" position="after">
+                <button string="Advance Payment" type="object" name="action_register_payment" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'sale')]}" groups="sale_payment_reserve.group_show_advance_payment_buttons_user"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" icon="fa-dollar"  type="object" name="action_show_payments" attrs="{'invisible': [('state', '!=', 'sale')]}" groups="sale_payment_reserve.group_show_advance_payment_buttons_user">
+                    <field name="payment_count" string="Payments" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='commitment_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='sale_shipping']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="commitment_date"/>
+                <!--                <field name="x_css" invisible="1"/>-->
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_picking_form_inh">
+        <field name="name">stock.picking.form.inh</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_assign']" position="after">
+                <button string="Check Availability" type="object" class="oe_highlight" name="action_reserve_do" attrs="{'invisible': [('state', '!=', 'confirmed')]}" groups="sale_payment_reserve.group_show_check_availability_buttons_user"/>
+                <button string="Check Availability" type="object" class="oe_highlight" name="action_assign" states="approved" groups="sale_payment_reserve.group_show_check_availability_buttons_user"/>
+                <button string="Validate" type="object" class="oe_highlight" name="action_validate_inh" states="in_transit" groups="sales_consultant_user_rights.group_show_validate_button_user"/>
+                <button string="Go to Ready" type="object" class="oe_highlight" name="action_ready" states="in_transit" groups="sales_consultant_user_rights.group_show_validate_button_user"/>
+                <button string="Check Availability Again" type="object" class="oe_highlight" name="action_assign_custom" attrs="{'invisible': [('state', '!=', 'assigned')]}" groups="sale_payment_reserve.group_show_check_availability_buttons_user"/>
+                <button string="Get Credit Approval" type="object" class="oe_highlight" name="action_get_approvals" attrs="{'invisible': ['|',('state', '!=', 'confirmed'), ('no_enough_amount', '=', False)]}" groups="sales_consultant_user_rights.group_show_do_buttons_user"/>
+                <button string="Approve From Manager" type="object" class="oe_highlight" groups="sale_payment_reserve.group_manager_approval" name="action_manager_approval" attrs="{'invisible': [('state', '!=', 'manager_approval')]}"/>
+                <button string="Approve From CEO" type="object" class="oe_highlight" groups="sale_payment_reserve.group_ceo_approval" name="action_ceo_approval" attrs="{'invisible': [('state', '!=', 'ceo_approval')]}"/>
+                <button name="action_reject" states="ceo_approval,manager_approval" type="object" class="oe_highlight"
+                        string="Reject" groups="sale_payment_reserve.group_ceo_approval,sale_payment_reserve.group_manager_approval"/>
+                <!--                    <button string="Get Approval" type="object" class="oe_highlight" name="action_get_approvals" attrs="{'invisible': ['|',('state', '!=', 'confirmed'), ('no_enough_amount', '=', False)]}"/>-->
+                <button string="Approve to Reserve From Manager" type="object" states="duration_manager_approvals" class="oe_highlight" name="action_duration_manager_approval" groups="sale_payment_reserve.group_manager_approval_reserve"/>
+                <!--                <button string="Approve to Reserve From Manager" type="object" states="duration_manager_approvals" class="oe_highlight" name="action_duration_manager_approval" groups="sale_payment_reserve.group_manager_approval_reserve"/>-->
+                <button string="Approve to Reserve From CEO" type="object" states="duration_ceo_approval" class="oe_highlight" name="action_duration_ceo_approval" groups="sale_payment_reserve.group_ceo_approval_reserve"/>
+                <button name="action_reject" states="duration_ceo_approval,duration_manager_approvals" type="object" class="oe_highlight"
+                        string="Reject" groups="sale_payment_reserve.group_ceo_approval_reserve,sale_payment_reserve.group_manager_approval_reserve"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,in_transit,done"/>
+            </xpath>
+            <xpath expr="//button[@name='action_assign']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="no_enough_amount" invisible="1"/>
+                <field name="is_approved_by_manager" invisible="1"/>
+                <field name="is_approved_by_ceo" invisible="1"/>
+                <field name="is_approved_by_manager_credit" invisible="1"/>
+                <field name="is_approved_by_ceo_credit" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_payment_form_inh">
+        <field name="name">account.payment.form.inh</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="user_id" string="Sales Person"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <report
+        id="product_report"
+        model="product.template"
+        string="Product Export"
+        report_type="xlsx"
+        name="xlsx_product_export.xlsx_product_export"
+        file="Product Export"
+        attachment_use="False"
+        />
+
+</odoo>

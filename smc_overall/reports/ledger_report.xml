@@ -1,0 +1,23 @@
+<odoo>
+
+    <template id="template_followup_report_inh" inherit_id="account_reports.main_template" >
+        <xpath expr="//div[1]" position="before">
+
+            <div class="col-12">
+<!--                <div class="text-left" style="font-size:15px;">-->
+<!--                    <span>Print Date</span>-->
+<!--                    <span t-esc="datetime.date.today()"/>-->
+<!--                    &lt;!&ndash;                 </div>&ndash;&gt;-->
+<!--                </div>-->
+
+                <div class="text-right">
+                    <t t-set="company" t-value="res_company"/>
+                    <h5><span t-esc="company.street"/></h5>
+                    <!--                 </div>-->
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

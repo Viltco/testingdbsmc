@@ -1,0 +1,61 @@
+<odoo>
+    <template id="product_report_temp">
+        <t t-call="web.html_container">
+            <!--                        <t t-foreach="docs" t-as="o">-->
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="text-left">
+                        <h3 class="text-center">Stock Valuation Report</h3>
+                        <div class="row mt64">
+                            <div class="col-6" >
+                                <strong>Partner: </strong> <span t-esc="doc.partner_id.name"/>
+                            </div>
+<!--                            <div class="col-6">-->
+<!--                                <strong>Print Date: </strong> <span t-esc="print_date"/>-->
+<!--                            </div>-->
+                        </div>
+<!--                        <p><strong>Date: </strong><span t-esc="docs.date_from" t-options="{'widget': 'date'}"/>  <strong>- </strong><span t-esc="docs.date_to" t-options="{'widget': 'date'}"/></p>-->
+                    </div>
+
+                    <table class="table table-sm" name="account_lines_table" style="border-bottom:1px solid black;">
+                        <tr style="border-bottom:1px solid black; font-size: 13px; font-weight:bold;">
+                            <td style="border-bottom:1px solid black;"><strong>Product</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Article No</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Finish No</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Available Qty</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Valuation W.r.t Cost</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Valuation w.r.t Sale price</strong></td>
+                        </tr>
+                        <tbody>
+                            <t t-set="total_cost" t-value="0"/>
+                            <t t-set="total_sale" t-value="0"/>
+                            <t t-set="total_qty" t-value="0"/>
+                            <tr t-foreach="products" t-as="product" style="font-size: 13px;">
+<!--                                <t t-if="line.product_id">-->
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="product.product_tmpl_id.name" /></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="product.product_tmpl_id.article_no"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="product.product_tmpl_id.finish_no"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><span t-esc="product.product_tmpl_id.free_sold_qty" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><span t-esc="product.product_tmpl_id.free_sold_qty * product.product_tmpl_id.standard_price" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><span t-esc="product.product_tmpl_id.free_sold_qty * product.product_tmpl_id.list_price" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/></td>
+                                <t t-set="total_qty" t-value="total_qty + product.product_tmpl_id.free_sold_qty"/>
+                                <t t-set="total_cost" t-value="total_cost +(product.product_tmpl_id.free_sold_qty * product.product_tmpl_id.standard_price)"/>
+                                <t t-set="total_sale" t-value="total_sale +(product.product_tmpl_id.free_sold_qty * product.product_tmpl_id.list_price)"/>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom:1px solid black;" colspan="3" class="text-left"></td>
+                                <td style="border-bottom:1px solid black;"  class="text-right"><span t-esc="total_qty"/></td>
+                                <td style="border-bottom:1px solid black;"  class="text-right"><span t-esc="total_cost"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-right"><span t-esc="total_sale"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+        <!--                </t>-->
+    </template>
+</odoo>

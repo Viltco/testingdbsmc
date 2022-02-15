@@ -1,0 +1,13 @@
+<odoo>
+
+     <record model="ir.module.category" id="inventory_manager_groups_root">
+        <field name="name">Inventory Manager</field>
+   		<field name="description">Inventory Manager Security</field>
+    </record>
+
+     <record id="group_inventory_manager" model="res.groups">
+            <field name="name">Inventory Manager</field>
+            <field name="category_id" ref="inventory_manager_groups_root"/>
+     </record>
+
+</odoo>

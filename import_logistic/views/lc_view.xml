@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_partner_form_branch" model="ir.ui.view">
+            <field name="name">res.partner.form.inh</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="phone" position="after">
+                    <field name="is_import_vendor"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_import_customer_view" model="ir.actions.act_window">
+            <field name="name">Import Vendors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('is_import_vendor', '=', True)]</field>
+            <field name="context">{'search_default_supplier': 1,'default_is_company': True, 'default_supplier_rank': 1, 'default_is_import_vendor': True}</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Record Found. Let's Create..........
+                </p>
+            </field>
+        </record>
+
+        <record id="action_local_customer_view" model="ir.actions.act_window">
+            <field name="name">Import Vendors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('is_import_vendor', '=', False)]</field>
+            <field name="context">{'search_default_supplier': 1, 'default_is_company': True, 'default_supplier_rank': 1, 'default_is_import_vendor': False}</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Record Found. Let's Create..........
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_account_local_supplier" name="Local Vendors" groups="import_logistic.local_purchase_group" parent="purchase.menu_procurement_management" action="import_logistic.action_import_customer_view" sequence="100"/>
+
+        <menuitem id="menu_account_import_supplier" name="Import Vendors" groups="import_logistic.import_purchase_group" parent="purchase.menu_procurement_management" action="import_logistic.action_import_customer_view" sequence="200"/>
+
+
+        <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.inh</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="lc_cost_origin" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_landed_cost_form_inherit" model="ir.ui.view">
+            <field name="name">stock.landed.cost.inh</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_ids']" position="replace">
+                    <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_product_template_form_inherit" model="ir.ui.view">
+            <field name="name">product.template.inh</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_custom_duty"/>
+                    <field name="is_other"/>
+                </xpath>
+
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Assess Values">
+                        <field name="assess_line">
+                            <tree editable="bottom">
+                                <field name="date"/>
+                                <field name="assess_val"/>
+                                <field name="inv_val"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.inh</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="forecasted_quantity.list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='forecast_qty']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form122</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="compute"  attrs="{'invisible':[('s_for','!=','import')]}" string="Compute" type="object"  class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="s_for" groups="import_logistic.import_purchase_group"/>
+                    <field name="lc_account" attrs="{'invisible':[('s_for','=','local')],'required':[('s_for','=','import')]}"/>
+                    <field name="is_lc" attrs="{'invisible':['|',('s_for','=','local'),('is_tt','=',True)],'required':[('s_for','=','import')]}"/>
+                    <field name="is_tt" attrs="{'invisible':['|',('s_for','=','local'),('is_lc','=',True)],'required':[('s_for','=','import')]}"/>
+                    <field name="lc_ref" readonly="1" attrs="{'invisible':['|',('s_for','=','local'),('is_tt','=',True)]}"/>
+                    <field name="tt_ref" readonly="1" attrs="{'invisible':['|',('s_for','=','local'),('is_lc','=',True)]}"/>
+
+                </xpath>
+
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="fx_rate" attrs="{'invisible':[('s_for','!=','import')],'required':[('s_for','=','import')]}"/>
+                    <field name="lc_ref_no"  attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="bank_name" attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="condition" attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="gd_no"  attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="bl_no"  attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="inv_no" attrs="{'invisible':[('s_for','!=','import')]}"/>
+                    <field name="clearing_no" attrs="{'invisible':[('s_for','!=','import')]}"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="string">Sale Price</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+                    <attribute name="string">Sale Value</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_qty']" position="attributes">
+                    <attribute name="string">QTY</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_qty']" position="attributes">
+                    <attribute name="sum">Total QTY</attribute>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="article_no"/>
+                    <field name="finish_no"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_qty']" position="after">
+                    <field name="product_uom" string="UOM"/>
+                    <field name="s_for" invisible="1"/>
+                    <field name="unit_pricefc" string="Rate invoice value  FC" attrs="{'column_invisible':[('parent.s_for','=','local')]}"/>
+                    <field name="sub_total_fc" string="Total invoice amount FC" attrs="{'column_invisible':[('parent.s_for','=','local')]}" sum="Total Invoice"/>
+                    <field name="sub_total_lp" attrs="{'column_invisible':[('parent.s_for','=','local')]}"/>
+                    <field name="assessed_value" attrs="{'column_invisible':[('parent.s_for','=','local')]}" sum="Assessed Value"/>
+                    <field name="total_assessed_value" attrs="{'column_invisible':[('parent.s_for','=','local')]}" sum="Total Assessed"/>
+                    <field name="lc_cost" attrs="{'column_invisible':[('parent.s_for','=','local')]}"/>
+                    <field name="cust_duty" attrs="{'column_invisible':[('parent.s_for','=','local')]}" sum="Total CD"/>
+                    <field name="other_charges" attrs="{'column_invisible':[('parent.s_for','=','local')]}" sum="Total Other Charges"/>
+                </xpath>
+
+                <xpath expr="//notebook" position="inside">
+                    <page string="LC And TT" attrs="{'invisible':[('s_for','!=','import')]}">
+                        <field name="lc_ids">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="name"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+                <!--                <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="before">-->
+                <!--                    <field name="article_no" />-->
+                <!--                    <field name="finish_no" />-->
+                <!--                    &lt;!&ndash;                    <field name="total_sqm"/>&ndash;&gt;-->
+                <!--                    &lt;!&ndash;                    <field name="total_pcs"/>&ndash;&gt;-->
+                <!--                </xpath>-->
+            </field>
+        </record>
+
+        <!-- Journal Entery View -->
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+
+                    <field name="lc_ref_po" attrs="{'invisible':[('is_lc_jour_entr','=',False),('is_tt_jour_entr','=',False)],'required':['|',('is_lc_jour_entr','=',True),('is_tt_jour_entr','=',True)]}"/>
+                    <field name="lc_ref" attrs="{'invisible':[('is_lc_jour_entr','=',False)]}" readonly="1"/>
+                    <field name="tt_ref" attrs="{'invisible':[('is_tt_jour_entr','=',False)]}" readonly="1"/>
+                    <field name="is_lc_jour_entr" invisible="1"/>
+                    <field name="is_tt_jour_entr" invisible="1"/>
+
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='debit']" position="before">
+                    <!-- attrs="{'invisible':[('move_id.lc_ref_po','=',False)],'required':[('move_id.lc_ref_po','=',True)]}" -->
+                    <field name="is_lc_jour_entr" invisible="1"/>
+                    <field name="is_tt_jour_entr" invisible="1"/>
+                    <field name="lc_charges" attrs="{'invisible':[('is_lc_jour_entr','=',False),('is_tt_jour_entr','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="view_account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_lc_jour"/>
+                    <field name="is_tt_jour"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+        <!-- Lc Form View -->
+        <record id="lc_tt_form" model="ir.ui.view">
+            <field name="name">lc.tt.form</field>
+            <field name="model">lc.tt</field>
+            <field name="arch" type="xml">
+                <form string="LC">
+                    <field name="name"/>
+                    <field name="amount" readonly="True"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="lc_tt_name_form" model="ir.ui.view">
+            <field name="name">lc.tt.name.form</field>
+            <field name="model">lc.tt.name</field>
+            <field name="arch" type="xml">
+                <form string="LC TT Name">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

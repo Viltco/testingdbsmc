@@ -1,0 +1,44 @@
+<odoo>
+
+        <record id="paperformat_sale_order"
+                model="report.paperformat">
+                <field name="name">Sale Order A4</field>
+                <field name="default" eval="True"/>
+                <field name="format">A4</field>
+                <field name="page_height">0</field>
+                <field name="page_width">0</field>
+                <field name="orientation">Portrait</field>
+                <field name="margin_top">35</field>
+                <field name="margin_bottom">30</field>
+                <field name="margin_left">5</field>
+                <field name="margin_right">5</field>
+                <field name="header_line" eval="True"/>
+                <field name="header_spacing">30</field>
+                <field name="dpi">90</field>
+        </record>
+
+        <record id="sale.action_report_saleorder" model="ir.actions.report">
+                <field name="name">Quotation / Order</field>
+                <field name="model">sale.order</field>
+                <field name="report_type">qweb-pdf</field>
+                <field name="report_name">sale.report_saleorder</field>
+                <field name="report_file">sale.report_saleorder</field>
+                <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+                <field name="binding_model_id" ref="sale.model_sale_order"/>
+                <field name="binding_type">report</field>
+                <field name="paperformat_id" ref="sale_order_reports.paperformat_sale_order"/>
+        </record>
+
+        <!-- QWeb Reports -->
+        <!--        <report-->
+        <!--                id="sale_order_report_inh"-->
+        <!--                string="Quotation / Sale Order"-->
+        <!--                model="sale.order"-->
+        <!--                report_type="qweb-pdf"-->
+        <!--                name="sale_order_reports.report_saleorder_document_inh"-->
+        <!--                file="sale_order_reports.report_saleorder_document_inh"-->
+        <!--                 paperformat="paperformat_sale_order"-->
+        <!--        />-->
+
+
+</odoo>

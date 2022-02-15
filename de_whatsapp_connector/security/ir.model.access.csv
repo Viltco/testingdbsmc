@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_whatsapp_settings,access.whatsapp.settings,model_whatsapp_settings,,1,1,1,1
+access_whatsapp_message_to,access.whatsapp.message.to,model_whatsapp_message,,1,1,1,1
+access_sync_history_whatsapp,access.sync.history.whatsapp,model_sync_history_whatsapp,base.group_user,1,1,1,1
+access_detail_logs,access.detail.logs,model_detail_logs,base.group_user,1,1,1,1
+access_whatsapp_message_wizard,access.whatsapp.message.wizard,model_whatsapp_message_wizard,base.group_user,1,1,1,1
+access_whatsapp_message_wizard_employee,access.whatsapp.message.wizard.employee,model_whatsapp_message_wizard_employee,base.group_user,1,1,1,1
+access_whatsapp_message_wizard_payments,access.whatsapp.message.wizard.payments,model_whatsapp_message_wizard_payments,base.group_user,1,1,1,1
+access_whatsapp_message_wizard_stock,access.whatsapp.message.wizard.stock,model_whatsapp_message_wizard_stock,base.group_user,1,1,1,1
+access_message_wizard,access.message.wizard,model_message_wizard,base.group_user,1,1,1,1
+

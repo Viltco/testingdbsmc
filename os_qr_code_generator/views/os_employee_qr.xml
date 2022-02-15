@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="hr_qr" model="ir.ui.view">
+        <field name="name">hr.employee.qr</field>
+        <field name="model">hr.employee</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="generate_hr_qr" type="object" string="Generate Qr" class="btn btn-primary" invisible="1"/>
+            </xpath>
+            <field name="parent_id" position="after">
+                <field name="qr_code" widget="image" class="oe_avatar" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

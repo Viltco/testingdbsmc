@@ -1,0 +1,127 @@
+<odoo>
+
+    <record model="ir.ui.view" id="stock_move_line_tree_inh">
+        <field name="name">stock.move.line.form.inh</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="is_to_active" invisible="1"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">is_to_active==True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    <record model="ir.ui.view" id="stock_move_line_form_inh">-->
+    <!--        <field name="name">stock.move.line.form.inh</field>-->
+    <!--        <field name="model">stock.move.line</field>-->
+    <!--        <field name="inherit_id" ref="stock.view_move_line_form"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//field[@name='location_dest_id']" position="after">-->
+    <!--                <field name="is_to_active"/>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record model="ir.ui.view" id="sale_order_tree_quo_inh">
+        <field name="name">sale.order.form.inh</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="before">
+                <field name="date_order"/>
+                <field name="quo_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_order_form_inh">
+        <field name="name">sale.order.form.inh</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="partner_balance" />
+                <field name="quo_date"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record model="ir.ui.view" id="purchase_order_form_inh">
+        <field name="name">purchase.order.form.inh</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="domain">[('default_location_dest_id.is_active', '=', True)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_picking_form_inh">
+        <field name="name">stock.picking.form.inh</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="manager_id"/>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="domain">[('is_active', '=', True)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                <attribute name="domain">[('is_active', '=', True)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'not in', ['draft', 'assigned'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'not in', ['draft', 'assigned'])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_warehouse_form_inh">
+        <field name="name">stock.warehouse.form.inh</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_active"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_location_form_inh">
+        <field name="name">stock.location.form.inh</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='return_location']" position="after">
+                <field name="is_active"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="action_stock_picking_view" model="ir.actions.act_window">
+        <field name="name">Delivery Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|',('user_id', '=', uid),('manager_id','=',uid)]</field>
+        <!--            <field name="context">{'search_default_supplier': 1, 'default_is_company': True, 'default_supplier_rank': 1, 'default_is_import_vendor': False}</field>-->
+        <field name="view_id" ref="stock.vpicktree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found. Let's Create..........
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_sales_deliveries_new" name="Delivery Order" parent="sale.sale_menu_root" action="smc_overall.action_stock_picking_view" sequence="150"/>
+
+
+</odoo>

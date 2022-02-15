@@ -1,0 +1,83 @@
+<odoo>
+  <data>
+
+
+    <record id="view_invoice_replica_form" model="ir.ui.view">
+      <field name="name">invoice.replica.form</field>
+      <field name="model">invoice.replica</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button string="Create Invoice" type="object" name="action_create_invoices" class="oe_highlight"/>
+          </header>
+          <sheet>
+
+            <group col="4">
+              <field name="partner_id" />
+              <field name="invoice_date" />
+              <field name="journal_id" />
+              <field name="invoice_user_id" />
+              <field name="currency_id" />
+              <field name="branch_id" />
+              <field name="ref" />
+              <field name="invoice_link" />
+              <field name="freight"/>
+              <field name="is_created" />
+            </group>
+            <notebook>
+              <page string="Invoice Lines">
+                <field name="invoice_line_ids">
+                  <tree editable="bottom">
+                    <field name="product_id" />
+                    <field name="price_unit" />
+                    <field name="quantity" />
+                    <field name="uom" />
+                    <field name="discount" />
+                    <field name="currency_id" />
+                    <field name="company_id" />
+                    <field name="account_id" />
+                    <field name="journal_id" />
+                  </tree>
+                </field>
+              </page>
+
+            </notebook>
+
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_invoice_replica_tree" model="ir.ui.view">
+      <field name="name">invoice.replica.tree</field>
+      <field name="model">invoice.replica</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="partner_id" />
+          <field name="invoice_date" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_invoice_replica_tree_view" model="ir.actions.act_window">
+      <field name="name">Invoice</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">invoice.replica</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="invoice_replica.view_invoice_replica_tree"/>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          No Invoice Found. Let's Create One!
+        </p>
+      </field>
+    </record>
+
+    <menuitem id="menu_invoice_replica"
+              action="invoice_replica.action_invoice_replica_tree_view"
+              name="Invoice Replica"
+              parent="account.menu_finance_receivables"
+              sequence="3"
+    />
+
+  </data>
+</odoo>

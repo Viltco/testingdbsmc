@@ -1,0 +1,49 @@
+<odoo>
+    <template id="partner_product_wise_report">
+        <t t-call="web.html_container">
+            <!--                        <t t-foreach="docs" t-as="o">-->
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="text-left">
+                        <h3 class="text-center">Client Account Statement</h3>
+                        <div class="row mt64">
+                            <div class="col-6" >
+                                <strong>Partner: </strong> <span t-esc="docs.partner_id.name"/>
+                            </div>
+                        </div>
+                        <p><strong>Date: </strong><span t-esc="docs.date_from" t-options="{'widget': 'date'}"/>  <strong>- </strong><span t-esc="docs.date_to" t-options="{'widget': 'date'}"/></p>
+                    </div>
+                    <table class="table table-sm" name="account_lines_table" style="border-bottom:1px solid black;">
+                        <tr style="border-bottom:1px solid black; font-size: 13px; font-weight:bold;">
+                            <td style="border-bottom:1px solid black;"><strong>Date</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Invoice#</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Item Details</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Unit</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Rate</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>QTY</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Discount</strong></td>
+                            <td style="border-bottom:1px solid black;"><strong>Net Amount</strong></td>
+                        </tr>
+                        <tbody>
+                            <t t-foreach="invoices" t-as="invoice" style="font-size: 13px;">
+                            <tr t-foreach="invoice.invoice_line_ids" t-as="line" style="font-size: 13px;" >
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="invoice.invoice_date" t-options="{'widget': 'date'}"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="invoice.name"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.product_id.name"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.product_uom_id.name"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.price_unit"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.quantity"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.discount"/></td>
+                                <td style="border-bottom:1px solid black;" class="text-left"><span t-esc="line.price_subtotal"/></td>
+                            </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

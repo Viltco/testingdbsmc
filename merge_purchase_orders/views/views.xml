@@ -1,0 +1,24 @@
+<odoo>
+  <data>
+    <record id="action_merge_purchase_server" model="ir.actions.server">
+      <field name="name">Merge Receipt</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="binding_model_id" ref="stock.model_stock_picking"/>
+      <field name="state">code</field>
+      <field name="code"> if records: action = records.action_open_wizard()</field>
+    </record>
+
+
+      <record model="ir.ui.view" id="view_stock_pickings_inh">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='picking_type_id']" position="before">
+            <field name="purchase_ids" widget="many2many_tags"/>
+          </xpath>
+        </field>
+      </record>
+
+  </data>
+</odoo>
